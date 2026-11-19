@@ -1,0 +1,13 @@
+import 'package:endometriosis_lib_flutter/config/app_config.dart';
+import 'package:endometriosis_lib_flutter/config/env_config.dart';
+import 'package:endometriosis_lib_flutter/config/pref_key.dart';
+import 'package:flutter_rapid/flutter_rapid.dart';
+import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+
+Future<void> main() async {
+  FlutterRapidApp flutterRapidApp = FlutterRapidApp();
+  await flutterRapidApp.bStart(AppSystemConfig()..currentEnv = EnvTypeEnum.DEV.name);
+  GetStorage().write(PrefKey.accessToken, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiIwMTYxMDEzOTQwMSIsImxhc3RfbmFtZSI6IlJhYWoiLCJhdXRob3JpdGllcyI6WyJBQ0NFU1NfVVNFUl9SRVNPVVJDRVMiLCJTVVNBU1RIT19URUxFTUVESUNJTkUiXSwiY2xpZW50X2lkIjoiY2xpZW50X2lkIiwiYXVkIjpbIm9hdXRoMi1yZXNvdXJjZSJdLCJwaG9uZSI6IjAxNjEwMTM5NDAxIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIiwidHJ1c3QiXSwiaWQiOjY2MDEsImV4cCI6MTc3OTgyNDQ1NywiZmlyc3RfbmFtZSI6IlJhc2VsIEguIiwianRpIjoiZWJkMTQ0NmEtMzc4Zi00ZjA3LThhZTctYThlN2Q5Y2Y5YmYzIiwiZW1haWwiOiJyYXNlbEBjbWVkaGVhbHRoLmNvbSIsInVzZXJuYW1lIjoiMDE2MTAxMzk0MDEifQ.h5AJJ71Y1TAP63SsynUtFyIRcMugI1CqB6WRSYdNMjk");
+  runApp(flutterRapidApp);
+}
