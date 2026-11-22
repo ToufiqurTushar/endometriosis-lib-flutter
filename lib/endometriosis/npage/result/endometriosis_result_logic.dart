@@ -9,6 +9,7 @@ import '../detail_view/endometriosis_detail_view_argument.dart';
 
 class EndometriosisResultLogic extends RapidStartLogic {
   EndometriosisRepository repository = Get.find();
+  late EndometriosisResultArgument arg;
   var result = (Get.arguments as EndometriosisResultArgument).result;
   var isNewScreening = (Get.arguments as EndometriosisResultArgument).isNewScreening;
   var referDoctorList = [
@@ -22,7 +23,7 @@ class EndometriosisResultLogic extends RapidStartLogic {
   @override
   void onInit() {
     super.onInit();
-
+    arg = (Get.arguments as EndometriosisResultArgument);
   }
 
   getDetailsResultAndNavigateToView() {

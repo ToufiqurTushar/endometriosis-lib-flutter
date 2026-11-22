@@ -70,6 +70,7 @@ class EndometriosisResultView extends RapidView<EndometriosisResultLogic> {
                         controller.getDetailsResultAndNavigateToView(),
                       }),
                     ),
+                    if(!controller.arg.isCoreAgentAppOrI4WeAgentApp && !controller.arg.isCoreUserAppOrI4WeMemberApp)
                     Visibility(
                       visible: controller.isNewScreening??false,
                       child: Expanded(

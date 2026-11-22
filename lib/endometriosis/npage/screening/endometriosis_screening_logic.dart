@@ -19,8 +19,9 @@ import 'endometriosis_screening_argument.dart';
 
 class EndometriosisScreeningLogic extends RapidStartLogic {
   EndometriosisRepository repository = Get.find();
-  var userId = (Get.arguments as EndometriosisScreeningArgument).userId;
-  var birthDate = (Get.arguments as EndometriosisScreeningArgument).birthDate;
+  late EndometriosisScreeningArgument arg;
+  late int userId;
+  late int birthDate;
 
   //live data
   final selectedPageIndex = 0.obs;
@@ -34,6 +35,9 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
   @override
   void onInit() {
     super.onInit();
+    arg = (Get.arguments as EndometriosisScreeningArgument);
+    userId = arg.userId!;
+    birthDate = arg.birthDate!;
     screeningPages = repository.getScreeningPages(birthDate: birthDate);
   }
 
@@ -121,8 +125,17 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
       globalState.hideBusy();
       if(response.isOk) {
         var result = ResultDto.fromJson(response.body);
-        Get.find<EndometriosisHomeLogic>().getData();
-        Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(result: result, isNewScreening: true));
+        if(arg.isCoreUserAppOrI4WeMemberApp) {
+          Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(
+              result: result,
+              isNewScreening: true,
+              isCoreAgentAppOrI4WeAgentApp: arg.isCoreAgentAppOrI4WeAgentApp,
+              isCoreUserAppOrI4WeMemberApp: arg.isCoreUserAppOrI4WeMemberApp
+          ));
+        } else {
+          Get.find<EndometriosisHomeLogic>().getData();
+          Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(result: result, isNewScreening: true));
+        }
       } else {
         ShowToast.error('something_wrong'.tr);
       }
