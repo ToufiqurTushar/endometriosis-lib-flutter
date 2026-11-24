@@ -26,6 +26,10 @@ class Endpoints {
   static String getResultDetailsUrl(int userId, int id){
     return 'api/v1/endometriosis/get-history?user_id=$userId&id=$id';
   }
+
+  static String postAnswerToBundleUrl(){
+    return 'api/v7/bundles';
+  }
 }
 
 class HttpProvider {

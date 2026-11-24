@@ -18,6 +18,9 @@ import '../result/endometriosis_result_view.dart';
 import 'endometriosis_screening_argument.dart';
 
 class EndometriosisScreeningLogic extends RapidStartLogic {
+  int? userIdWhileInitLogic;
+  int? biirthDateWhileInitLogic;
+  EndometriosisScreeningLogic({this.userIdWhileInitLogic, this.biirthDateWhileInitLogic});
   EndometriosisRepository repository = Get.find();
   late EndometriosisScreeningArgument arg;
   late int userId;
@@ -35,9 +38,16 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
   @override
   void onInit() {
     super.onInit();
-    arg = (Get.arguments as EndometriosisScreeningArgument);
-    userId = arg.userId!;
-    birthDate = arg.birthDate!;
+    if(Get.arguments is EndometriosisScreeningArgument) {
+      arg = (Get.arguments as EndometriosisScreeningArgument);
+      userId = arg.userId!;
+      birthDate = arg.birthDate!;
+    }
+    else {
+      arg = EndometriosisScreeningArgument();
+      userId = userIdWhileInitLogic??0;
+      birthDate = biirthDateWhileInitLogic??0;
+    }
     screeningPages = repository.getScreeningPages(birthDate: birthDate);
   }
 
@@ -111,35 +121,70 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
           ).toJson());
         }
       });
-      log(jsonEncode(answers));
-      postAnswer(jsonEncode(answers));
+      postAnswer(answers);
     } else {
       ShowToast.error("please_fillup_required_field".tr);
     }
   }
 
-  postAnswer(answerData) async {
+  postAnswer(List<dynamic> answers) async {
+    String answerData = jsonEncode(answers);
     log(answerData);
     globalState.showBusy(dismissible: false);
-    repository.POST(Endpoints.postAnswerUrl(userId!), answerData).then((response){
+
+    var url = Endpoints.postAnswerUrl(userId);
+    repository.POST(url, answerData).then((response){
       globalState.hideBusy();
       if(response.isOk) {
         var result = ResultDto.fromJson(response.body);
-        if(arg.isCoreUserAppOrI4WeMemberApp) {
-          Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(
-              result: result,
-              isNewScreening: true,
-              isCoreAgentAppOrI4WeAgentApp: arg.isCoreAgentAppOrI4WeAgentApp,
-              isCoreUserAppOrI4WeMemberApp: arg.isCoreUserAppOrI4WeMemberApp
-          ));
-        } else {
-          Get.find<EndometriosisHomeLogic>().getData();
-          Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(result: result, isNewScreening: true));
-        }
+        Get.find<EndometriosisHomeLogic>().getData();
+        Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(result: result, isNewScreening: true));
       } else {
         ShowToast.error('something_wrong'.tr);
       }
     });
+    // if(arg.isCoreAgentAppOrI4WeAgentApp || arg.isCoreUserAppOrI4WeMemberApp) {
+    //   url = Endpoints.postAnswerToBundleUrl();
+    //   var requestData = RequestMeasurementAsBundle(
+    //       userId: userId,
+    //       bundlesMeasurements: [
+    //         BundlesMeasurement(
+    //           userId: userId,
+    //           measurementTypeCodeId: 24,
+    //           measuredAt: DateTime.now().millisecondsSinceEpoch,
+    //           inputs: BundleInputs(endometriosis: 0),
+    //           endometriosis: jsonEncode(answers)
+    //         )
+    //       ],
+    //   ).toJson();
+    //   repository.POST(url, requestData).then((response){
+    //     globalState.hideBusy();
+    //     if(response.isOk) {
+    //       var measurement = RequestMeasurementAsBundle.fromJson(response.body).bundlesMeasurements!.first;
+    //       if(arg.isCoreAgentAppOrI4WeAgentApp) {
+    //         Get.offNamed('/screening_report_result_details', arguments: EndometriosisResultArgument(
+    //             bundleResult: measurement,
+    //             isNewScreening: true,
+    //             isCoreAgentAppOrI4WeAgentApp: arg.isCoreAgentAppOrI4WeAgentApp,
+    //             isCoreUserAppOrI4WeMemberApp: arg.isCoreUserAppOrI4WeMemberApp
+    //         ));
+    //       } else if(arg.isCoreUserAppOrI4WeMemberApp) {
+    //         Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(
+    //             bundleResult: measurement,
+    //             isNewScreening: true,
+    //             isCoreAgentAppOrI4WeAgentApp: arg.isCoreAgentAppOrI4WeAgentApp,
+    //             isCoreUserAppOrI4WeMemberApp: arg.isCoreUserAppOrI4WeMemberApp
+    //         ));
+    //       }
+    //     } else {
+    //       ShowToast.error('something_wrong'.tr);
+    //     }
+    //   });
+    // } else {
+    //
+    // }
+
+
   }
 
   pressBackWarning() {
