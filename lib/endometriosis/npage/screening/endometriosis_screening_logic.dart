@@ -58,12 +58,12 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
       birthDate = birthDateWhileInitLogic??0;
     }
 
-    screeningPages = repository.getScreeningPages(
-        birthDate: birthDate,
-        heightInFeet: heightInFeetWhileInitLogic,
-        heightInInchi: heightInInchiWhileInitLogic,
-        weightInKg: weightInKgWhileInitLogic
-    );
+    // screeningPages = repository.getScreeningPages(
+    //     birthDate: birthDate,
+    //     heightInFeet: heightInFeetWhileInitLogic,
+    //     heightInInchi: heightInInchiWhileInitLogic,
+    //     weightInKg: weightInKgWhileInitLogic
+    // );
 
     RLog.error("birthDate$birthDate, heightInFeetWhileInitLogic:$heightInFeetWhileInitLogic heightInInchiWhileInitLogic:$heightInInchiWhileInitLogic, weightInKgWhileInitLogic:$weightInKgWhileInitLogic");
   }
