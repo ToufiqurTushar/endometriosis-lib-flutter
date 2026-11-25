@@ -22,7 +22,7 @@ import '../enum/yes_no_often_enum.dart';
 
 class EndometriosisRepository extends HttpProvider {
 
-  List<ScreeningPage> getScreeningPages({int? birthDate, List<Input?>? inputs, bool isDetailsView = false}) {
+  List<ScreeningPage> getScreeningPages({int? birthDate, List<Input?>? inputs, bool isDetailsView = false, bool isBirthDayReadonly = false}) {
     return [
       ScreeningPage(
           page: 1,
@@ -30,7 +30,7 @@ class EndometriosisRepository extends HttpProvider {
             Content(
               key: 'pm1',
               initialValue: isDetailsView? DateTime.fromMillisecondsSinceEpoch(int.parse(inputs?.firstWhereOrNull((item)=>item?.questionCode == 'pm1')?.answerText?.first??"")) : DateTime.fromMillisecondsSinceEpoch(birthDate??DateTime.now().millisecondsSinceEpoch),
-              readOnly: isDetailsView,
+              readOnly: isDetailsView || isBirthDayReadonly,
               label: 'What is your date of birth?',
               labelBn: 'আপনার জন্ম তারিখ কবে?',
               hint: 'Age',

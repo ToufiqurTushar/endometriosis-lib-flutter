@@ -25,6 +25,7 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
   late EndometriosisScreeningArgument arg;
   late int userId;
   late int birthDate;
+  bool isBirthDayReadonly = false;
 
   //live data
   final selectedPageIndex = 0.obs;
@@ -48,7 +49,13 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
       userId = userIdWhileInitLogic??0;
       birthDate = biirthDateWhileInitLogic??0;
     }
-    screeningPages = repository.getScreeningPages(birthDate: birthDate);
+
+    //readonly birthday edit if screening from core user/agent app
+    if(biirthDateWhileInitLogic != null) {
+      isBirthDayReadonly = true;
+    }
+
+    screeningPages = repository.getScreeningPages(birthDate: birthDate, isBirthDayReadonly:isBirthDayReadonly);
   }
 
   //function variable
