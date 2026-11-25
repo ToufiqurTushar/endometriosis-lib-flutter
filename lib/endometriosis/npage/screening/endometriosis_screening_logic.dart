@@ -19,13 +19,21 @@ import 'endometriosis_screening_argument.dart';
 
 class EndometriosisScreeningLogic extends RapidStartLogic {
   int? userIdWhileInitLogic;
-  int? biirthDateWhileInitLogic;
-  EndometriosisScreeningLogic({this.userIdWhileInitLogic, this.biirthDateWhileInitLogic});
+  int? birthDateWhileInitLogic;
+  int? heightInFeetWhileInitLogic;
+  double? heightInInchiWhileInitLogic;
+  double? weightInKgWhileInitLogic;
+  EndometriosisScreeningLogic({
+    this.userIdWhileInitLogic,
+    this.birthDateWhileInitLogic,
+    this.heightInFeetWhileInitLogic,
+    this.heightInInchiWhileInitLogic,
+    this.weightInKgWhileInitLogic,
+  });
   EndometriosisRepository repository = Get.find();
   late EndometriosisScreeningArgument arg;
   late int userId;
   late int birthDate;
-  bool isBirthDayReadonly = false;
 
   //live data
   final selectedPageIndex = 0.obs;
@@ -47,15 +55,17 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
     else {
       arg = EndometriosisScreeningArgument();
       userId = userIdWhileInitLogic??0;
-      birthDate = biirthDateWhileInitLogic??0;
+      birthDate = birthDateWhileInitLogic??0;
     }
 
-    //readonly birthday edit if screening from core user/agent app
-    if(biirthDateWhileInitLogic != null) {
-      isBirthDayReadonly = true;
-    }
+    screeningPages = repository.getScreeningPages(
+        birthDate: birthDate,
+        heightInFeet: heightInFeetWhileInitLogic,
+        heightInInchi: heightInInchiWhileInitLogic,
+        weightInKg: weightInKgWhileInitLogic
+    );
 
-    screeningPages = repository.getScreeningPages(birthDate: birthDate, isBirthDayReadonly:isBirthDayReadonly);
+    RLog.error("birthDate$birthDate, heightInFeetWhileInitLogic:$heightInFeetWhileInitLogic heightInInchiWhileInitLogic:$heightInInchiWhileInitLogic, weightInKgWhileInitLogic:$weightInKgWhileInitLogic");
   }
 
   //function variable
@@ -150,48 +160,6 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
         ShowToast.error('something_wrong'.tr);
       }
     });
-    // if(arg.isCoreAgentAppOrI4WeAgentApp || arg.isCoreUserAppOrI4WeMemberApp) {
-    //   url = Endpoints.postAnswerToBundleUrl();
-    //   var requestData = RequestMeasurementAsBundle(
-    //       userId: userId,
-    //       bundlesMeasurements: [
-    //         BundlesMeasurement(
-    //           userId: userId,
-    //           measurementTypeCodeId: 24,
-    //           measuredAt: DateTime.now().millisecondsSinceEpoch,
-    //           inputs: BundleInputs(endometriosis: 0),
-    //           endometriosis: jsonEncode(answers)
-    //         )
-    //       ],
-    //   ).toJson();
-    //   repository.POST(url, requestData).then((response){
-    //     globalState.hideBusy();
-    //     if(response.isOk) {
-    //       var measurement = RequestMeasurementAsBundle.fromJson(response.body).bundlesMeasurements!.first;
-    //       if(arg.isCoreAgentAppOrI4WeAgentApp) {
-    //         Get.offNamed('/screening_report_result_details', arguments: EndometriosisResultArgument(
-    //             bundleResult: measurement,
-    //             isNewScreening: true,
-    //             isCoreAgentAppOrI4WeAgentApp: arg.isCoreAgentAppOrI4WeAgentApp,
-    //             isCoreUserAppOrI4WeMemberApp: arg.isCoreUserAppOrI4WeMemberApp
-    //         ));
-    //       } else if(arg.isCoreUserAppOrI4WeMemberApp) {
-    //         Get.offNamed(EndometriosisResultView.routeName, arguments: EndometriosisResultArgument(
-    //             bundleResult: measurement,
-    //             isNewScreening: true,
-    //             isCoreAgentAppOrI4WeAgentApp: arg.isCoreAgentAppOrI4WeAgentApp,
-    //             isCoreUserAppOrI4WeMemberApp: arg.isCoreUserAppOrI4WeMemberApp
-    //         ));
-    //       }
-    //     } else {
-    //       ShowToast.error('something_wrong'.tr);
-    //     }
-    //   });
-    // } else {
-    //
-    // }
-
-
   }
 
   pressBackWarning() {
