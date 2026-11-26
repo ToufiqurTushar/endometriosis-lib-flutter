@@ -20,6 +20,7 @@ class Content {
       this.hintBn = "",
       this.options,
       this.readOnly = false,
+      this.ignore = false,
       this.isVisible = true,
       this.labelAtCenter = false,
       this.required = true,
@@ -42,6 +43,7 @@ class Content {
   String hintBn = "";
   List<Data>? options;
   bool readOnly = false;
+  bool ignore = false;
   bool isVisible = true;
   bool labelAtCenter = false;
   bool required = true;

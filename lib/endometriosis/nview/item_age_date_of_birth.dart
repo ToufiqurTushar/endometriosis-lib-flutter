@@ -35,9 +35,12 @@ class _ItemAgeDateOfBirthState extends State<ItemAgeDateOfBirth> {
           padding: EdgeInsets.all(widget.padding),
           child: Column(
             children: [
-              SelectDate(widget.content, context, widget.form, padding: widget.padding, elevation: widget.elevation, onChanged: (value){
-                setState(() {});
-              }),
+              IgnorePointer(
+                ignoring: widget.content.ignore,
+                child: SelectDate(widget.content, context, widget.form, padding: widget.padding, elevation: widget.elevation, onChanged: (value){
+                  setState(() {});
+                }),
+              ),
               const SizedBox(height: 12,),
               buildContentsOfEachPage(widget.content.children!, context, widget.form, padding: widget.padding, elevation: widget.elevation)
             ],

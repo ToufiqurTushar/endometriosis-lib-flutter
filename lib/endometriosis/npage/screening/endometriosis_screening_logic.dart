@@ -57,15 +57,14 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
       userId = userIdWhileInitLogic??0;
       birthDate = birthDateWhileInitLogic??0;
     }
+    RLog.error("birthDate:$birthDate, heightInFeetWhileInitLogic:$heightInFeetWhileInitLogic heightInInchiWhileInitLogic:$heightInInchiWhileInitLogic, weightInKgWhileInitLogic:$weightInKgWhileInitLogic");
 
-    // screeningPages = repository.getScreeningPages(
-    //     birthDate: birthDate,
-    //     heightInFeet: heightInFeetWhileInitLogic,
-    //     heightInInchi: heightInInchiWhileInitLogic,
-    //     weightInKg: weightInKgWhileInitLogic
-    // );
-
-    RLog.error("birthDate$birthDate, heightInFeetWhileInitLogic:$heightInFeetWhileInitLogic heightInInchiWhileInitLogic:$heightInInchiWhileInitLogic, weightInKgWhileInitLogic:$weightInKgWhileInitLogic");
+    screeningPages = repository.getScreeningPages(
+        birthDate: birthDate,
+        heightInFeet: heightInFeetWhileInitLogic,
+        heightInInchi: heightInInchiWhileInitLogic,
+        weightInKg: weightInKgWhileInitLogic
+    );
   }
 
   //function variable
@@ -113,6 +112,9 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
   submit() async {
     if (form.currentState?.saveAndValidate() ?? false) {
       final formMap = form.currentState!.value;
+      //birthDay = form.currentState!.getRawValue('pm1');
+      double height = feetAndInchesToCm(form.currentState!.getRawValue('BMI_hf_child'), form.currentState!.getRawValue('BMI_hi_child'));
+      double weightInKg = double.tryParse(form.currentState!.getRawValue('BMI_w_child'))??0.0;
 
       //if not user interaction
       if(!formTransformedValues.containsKey('pm1')) {
@@ -138,13 +140,13 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
           ).toJson());
         }
       });
-      postAnswer(answers);
+      postAnswer(answers, height, weightInKg);
     } else {
       ShowToast.error("please_fillup_required_field".tr);
     }
   }
 
-  postAnswer(List<dynamic> answers) async {
+  postAnswer(List<dynamic> answers, double height, double weightInKg) async {
     String answerData = jsonEncode(answers);
     log(answerData);
     globalState.showBusy(dismissible: false);
@@ -233,4 +235,12 @@ class EndometriosisScreeningLogic extends RapidStartLogic {
       form.currentState!.fields[key]?.didChange(null);
     });
   }
+
+  double feetAndInchesToCm(dynamic feet, dynamic inches) {
+    feet = int.tryParse(feet);
+    inches = double.tryParse(inches);
+    double totalInches = (feet * 12) + inches;
+    return totalInches * 2.54;
+  }
+
 }

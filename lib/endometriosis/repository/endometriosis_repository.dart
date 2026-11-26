@@ -38,6 +38,7 @@ class EndometriosisRepository extends HttpProvider {
               key: 'pm1',
               initialValue: isDetailsView? DateTime.fromMillisecondsSinceEpoch(int.parse(inputs?.firstWhereOrNull((item)=>item?.questionCode == 'pm1')?.answerText?.first??"")) : DateTime.fromMillisecondsSinceEpoch(birthDate??DateTime.now().millisecondsSinceEpoch),
               readOnly: isDetailsView,
+              ignore: birthDate != null,
               label: 'What is your date of birth?',
               labelBn: 'আপনার জন্ম তারিখ কবে?',
               hint: 'Age',
@@ -61,8 +62,7 @@ class EndometriosisRepository extends HttpProvider {
                       hint: 'Height(feet)',
                       hintBn: 'উচ্চতা (ফুট)',
                       type: ContentEnum.BMI,
-                      readOnly: heightInFeet != null,
-                      initialValue: isDetailsView? inputs?.firstWhereOrNull((item)=>item?.questionCode == 'BMI')?.answerText![0]: heightInFeet,
+                      initialValue: isDetailsView? inputs?.firstWhereOrNull((item)=>item?.questionCode == 'BMI')?.answerText![0]: heightInFeet?.toString(),
                       validators: [
                         FormBuilderValidators.min(0, errorText: 'Min 0'.tr),
                         FormBuilderValidators.max(7, errorText: 'Max 7'.tr)
@@ -73,8 +73,7 @@ class EndometriosisRepository extends HttpProvider {
                       hint: 'Height(inch)',
                       hintBn: 'উচ্চতা (ইঞ্চি)',
                       required: false,
-                      readOnly: heightInInchi != null,
-                      initialValue: isDetailsView? inputs?.firstWhereOrNull((item)=>item?.questionCode == 'BMI')?.answerText![1]: heightInInchi,
+                      initialValue: isDetailsView? inputs?.firstWhereOrNull((item)=>item?.questionCode == 'BMI')?.answerText![1]: heightInInchi?.toString(),
                       validators: [
                         FormBuilderValidators.transform(<String>(value)=> value == null || value.toString().isEmpty ? "0" : value, FormBuilderValidators.min(0, errorText: 'Min 0'.tr)),
                         FormBuilderValidators.transform(<String>(value)=> value == null || value.toString().isEmpty ? "0" : value, FormBuilderValidators.max(11.99, errorText: 'Max 11.99'.tr)),
@@ -84,8 +83,7 @@ class EndometriosisRepository extends HttpProvider {
                       key: 'BMI_w_child',
                       hint: 'Weight(kg)',
                       hintBn: 'ওজন(কেজি)',
-                      readOnly: weightInKg != null,
-                      initialValue: isDetailsView? inputs?.firstWhereOrNull((item)=>item?.questionCode == 'BMI')?.answerText![2]: weightInKg,
+                      initialValue: isDetailsView? inputs?.firstWhereOrNull((item)=>item?.questionCode == 'BMI')?.answerText![2]: weightInKg?.toString(),
                       validators: [
                         FormBuilderValidators.min(0, errorText: 'Min 0'.tr),
                         FormBuilderValidators.max(160, errorText: 'Max 160'.tr)

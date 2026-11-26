@@ -58,6 +58,7 @@ Widget buildContentsOfEachPage(List<Content> contents, context, form, {double pa
         child = SelectDate(content, context, form, padding: padding, elevation: elevation);
         break;
       case ContentEnum.AGE_DATE_OF_BIRTH:
+        RLog.error("Select Date:${content.toJson()}");
         child = ItemAgeDateOfBirth(content, context, form, padding: padding, elevation: elevation);
       break;
       case ContentEnum.RADIO_GROUP:
